@@ -1,28 +1,31 @@
 use card::Card;
 use rand::random;
 use crate::games::blackjack::card;
+use card::Value;
 use crate::games::blackjack::color::Color;
 
-struct Deck {
+pub(crate) struct Deck {
     cards: Vec<Card>,
 }
 
 impl Deck {
+
+    /// Creates a new Deck of 52 cards
     fn new() -> Deck {
         let mut v: Vec<Card> = vec![];
-        for i in 1..=13 {
-            v.push( Card::new(i, Color::Spade));
-            v.push( Card::new(i, Color::Heart));
-            v.push( Card::new(i, Color::Diamond));
-            v.push( Card::new(i, Color::Club));
+        for i  in 2..=14 {
+            v.push(Card::new(Value::value_by_id(i), Color::Club));
+            v.push(Card::new(Value::value_by_id(i), Color::Spade));
+            v.push(Card::new(Value::value_by_id(i), Color::Heart));
+            v.push(Card::new(Value::value_by_id(i), Color::Diamond));
         }
         Deck {
             cards: v
         }
     }
 
+
     /// Shuffles the deck of cards using the Fisher-Yates algorithm
-    ///
     fn shuffle(&mut self){
         let mut j: u8;
         let mut tmp: Card;
@@ -36,6 +39,14 @@ impl Deck {
         }
     }
 
+    /// Draw a card from the deck
+    /// Pops the last card from the deck and returns it if the deck contains a card
+    pub(crate) fn draw(&mut self) -> Option<Card> {
+        self.cards.pop()
+    }
+
+
+
     fn print(&self){
         for i in 0..52 {
             self.cards[i].print();
@@ -44,8 +55,23 @@ impl Deck {
 }
 
 #[test]
-fn testdeck(){
+fn test_new_deck_and_shuffle(){
     let mut d: Deck = Deck::new();
-    d.shuffle();
+    for i in 0..3{
+        d.shuffle();
+    }
     d.print();
+}
+
+#[test]
+fn test_draw(){
+    let mut deck: Deck = Deck::new();
+    for i in 0..deck.cards.len() + 3 {
+        let card = deck.draw();
+        match card {
+            None => { println!("deck vide")}
+            Some(c) => {c.print()}
+        }
+        println!("number of cards remaining {}", deck.cards.len())
+    }
 }
