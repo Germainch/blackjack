@@ -7,7 +7,8 @@ use crate::games::blackjack::deck::Deck;
 pub(crate) struct Player {
     name: String,
     cards: Vec<Card>,
-    score: u8
+    score: u8,
+    money: u32,
 }
 
 impl Player {
@@ -16,6 +17,18 @@ impl Player {
             name,
             cards: vec![],
             score: 0,
+            money: 1000,
+        }
+    }
+
+    /// subtracts the money the player bets from his wallet if he has that much
+    fn bet(&mut self, amount: u8){
+        if(amount >= self.money){
+            println!("you don't have that kind of money! ");
+            todo!()
+        }
+        else{
+            self.money -= amount;
         }
     }
 
