@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Home</title>
   <link rel="stylesheet" href="style/style.css"/>
+  <link rel="stylesheet" href="style/card.css"/>
+  <link rel="stylesheet" href="style/navbar.css"/>
   <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
 </head>
 
@@ -22,29 +24,53 @@
       Navigation
     </aside>
 
-    <div id="canvas">Canvas
-      <div id="player-deck" class="card-container">
-        <div class="card">Carte 1</div>
-        <div class="card">Carte 2</div>
-        <div class="card">Carte 2</div>
+    <div id="canvas">
+
+      <div class="player-panel">
+        <div id="player-deck" class="card-container">
+          <div class="card">
+            <div class="color">&spades;</div>
+            <div class="value">J</div>
+          </div>
+        </div>
       </div>
+
+      <div id="cpu-score" class="score">
+        score:
+      </div>
+
       <div id="game-buttons">
         <button>Draw</button>
         <button>Fold</button>
         <button>Bet</button>
       </div>
-      <div id="cpu-deck" class="card-container">
-        <div class="card">Carte 1</div>
-        <div class="card">Carte 2</div>
-        <div class="card">Carte 2</div>
+
+      <div id="player-score" class="score">
+        score:
       </div>
+
+      <div class="cpu-panel">
+        <div id="cpu-deck" class="card-container">
+
+          <div class="card">
+            <div class="color">&heartsuit;</div>
+            <div class="value">K</div>
+          </div>
+
+          <div class="card">
+            <div class="color">&heartsuit;</div>
+            <div class="value">Q</div>
+          </div>
+          <div class="card">
+            <div class="color">&spades;</div>
+            <div class="value">J</div>
+          </div>
+        </div>
+      </div>
+
+
 
     </div>
   </main>
-
-
-  <footer>
-    Footer
-  </footer>
 </body>
 </html>
