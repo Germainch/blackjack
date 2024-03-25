@@ -11,7 +11,7 @@ pub(crate) struct Deck {
 impl Deck {
 
     /// Creates a new Deck of 52 cards
-    fn new() -> Deck {
+    pub(crate) fn new() -> Deck {
         let mut v: Vec<Card> = vec![];
         for i  in 2..=14 {
             v.push(Card::new(Value::value_by_id(i), Color::Club));
@@ -26,7 +26,7 @@ impl Deck {
 
 
     /// Shuffles the deck of cards using the Fisher-Yates algorithm
-    fn shuffle(&mut self){
+    pub(crate) fn shuffle(&mut self){
         let mut j: u8;
         let mut tmp: Card;
         for i in 0 .. 51 {

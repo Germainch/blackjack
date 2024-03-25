@@ -29,7 +29,7 @@ pub(crate) enum Value{
 impl Value{
     /// returns the value of a variant, the Ace can be 1 or 11 depending on the state of the player's hand
     /// the default value of the Ace is 11, it can be changed by the game that computes the player's score
-    pub fn value(&self) -> u8 {
+    pub fn value_to_int(&self) -> u8 {
         match self {
             Value::Ace => { 11 }
             Value::King => { 10 }
