@@ -1,0 +1,1 @@
+pub(crate) const FRANCIS: &str = "FRANCIS";

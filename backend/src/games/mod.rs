@@ -1,1 +1,1 @@
-mod blackjack;
+pub(crate) mod blackjack;

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Home</title>
-  <link rel="stylesheet" href="style/style.css"/>
-  <link rel="stylesheet" href="style/card.css"/>
-  <link rel="stylesheet" href="style/navbar.css"/>
-  <link rel="stylesheet" href="style/score.css"/>
+  <link rel="stylesheet" href="./style/style.css"/>
+  <link rel="stylesheet" href="./style/navbar.css"/>
+  <link rel="stylesheet" href="./style/card.css"/>
+  <link rel="stylesheet" href="./style/score.css"/>
   <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
 </head>
 
@@ -51,17 +51,17 @@
       </div>
 
       <div id="game-buttons">
-        <button>Draw</button>
-        <button>Fold</button>
+        <button hx-get="/player/draw" hx-target="#player-deck" hx-swap="innerHTML"> Draw </button>
+        <button hx-post="/player/fold" hx-target="#game-buttons" hx-swap="innerHTML"> Fold </button>
         <button>Bet</button>
       </div>
 
       <!-- PLAYER SIDE -->
-
-      <div id="player-score" class="score">
-        score:
+      <div id="player-info">
+        <div id="money-bet"> bet : </div>
+        <div id="player-score" class="score">score :</div>
+        <div id = wallet> wallet</div>
       </div>
-
 
       <div class="player-panel">
         <div id="player-deck" class="card-container">

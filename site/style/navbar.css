@@ -1,0 +1,23 @@
+.navbar {
+    background-color: darkgrey; /* Dark background color */
+    width: 100%;
+    overflow-block: hidden;
+    display: flex;
+    justify-content:center;
+    flex-wrap: wrap;
+}
+
+/* Style for the links inside the navigation bar */
+.navbar a {
+    display: block;
+    color: black; /* Text color */
+    text-align: center;
+    padding: 14px 16px; /* Top/bottom and left/right padding */
+    text-decoration: none;
+}
+
+/* Change color on hover */
+.navbar a:hover {
+    background-color: #ddd; /* Light background color on hover */
+    color: black; /* Text color on hover */
+}

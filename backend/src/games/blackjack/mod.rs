@@ -1,5 +1,6 @@
 mod card;
 mod color;
 mod deck;
-mod blackjack;
+pub(crate) mod blackjack;
 mod player;
+mod score;
