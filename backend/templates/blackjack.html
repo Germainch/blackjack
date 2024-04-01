@@ -45,11 +45,11 @@
     #canvas{
         background: darkslategrey;
         position: relative;
-        width: 90vw;
-        height: 90vh;
+        width: 100vw;
+        height: 100vh;
         display: grid;
         border: 2px dashed black;
-        justify-content: center;
+        align-content: space-between;
         align-items: center;
     }
 
@@ -70,14 +70,15 @@
         justify-content: center;
         align-items: center;
         flex-wrap: nowrap;
-        padding: 20px;
-        gap: 10px;
+        padding: 5px;
+        gap: 30px;
+        margin-bottom: 12px;
     }
 
     #game-buttons button {
         background-color: #d4a373; /* Rustic brown */
         color: #fff; /* White text */
-        padding: 10px 20px; /* Padding */
+        padding: 20px 40px; /* Padding */
         border: none; /* No border */
         border-radius: 5px; /* Rounded corners */
         font-size: 16px; /* Font size */
@@ -94,6 +95,17 @@
     }
 
     .score{
+        background: #896F5F;
+        font-size: 30px;
+        font-weight: bolder;
+        border: 3px solid beige;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
 
     }
 
@@ -115,16 +127,38 @@
         align-content: center;
         align-items: center;
         font-size: 30px;
-        justify-content: space-between;
+        justify-content: space-evenly;
 
-        background-color: darkseagreen; /* Rustic brown */
-        color: black; /* White text */
+        background-color: #3e5867;
         padding: 10px 20px; /* Padding */
-        border-radius: 5px; /* Rounded corners */
         font-weight: bold; /* Bold text */
         text-align: center; /* Center-align text */
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
-        width: 60vw;
+        color:white;
+    }
+
+    .score-container{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 30px;
+        gap: 15px;
+        color: #eae6de;
+    }
+
+    #central-zone{
+        display: flex;
+        align-content: center;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: row;
+    }
+    #scores{
+        display: flex;
+        flex-direction: column;
+        gap: 19px;
     }
 
 </style>
@@ -132,7 +166,11 @@
 <main>
     <div id="canvas">
 
-
+        <!-- PLAYER SIDE -->
+        <div id="player-info">
+            <div id="money-bet"> BET : </div>
+            <div id="player-money"> BANK : </div>
+        </div>
 
         <!-- CPU SIDE -->
         <div class="cpu-panel">
@@ -154,26 +192,38 @@
             </div>
         </div>
 
-        <div id="cpu-info">
-            <div id="cpu-score" class="score">
-                score:
+        <div id="central-zone">
+            <div id="scores">
+
+                <div class="score-container">
+                    <div> house </div>
+                    <div id="cpu-score" class="score">
+                        15
+                    </div>
+                </div>
+
+                <div class="score-container">
+                    <div> player </div>
+                    <div id="player-score" class="score">
+                        20
+                    </div>
+                </div>
+
             </div>
-            <img src="../deck" alt="deck" class="card-back">
+
+            <div id="deck-container">
+
+                <img src="../deck" alt="deck" class="card-back">
+            </div>
         </div>
 
 
-        <div id="game-buttons">
-            <button> Draw </button>
-            <button> Fold </button>
-            <button> Bet </button>
-        </div>
 
-        <!-- PLAYER SIDE -->
-        <div id="player-info">
-            <div id="money-bet"> bet : </div>
-            <div id="player-score" class="score">score :</div>
-            <div id="player-money"> bank :</div>
-        </div>
+        <!-- PLAYER SCORE -->
+
+
+
+
 
         <div class="player-panel">
             <div id="player-deck" class="card-container">
@@ -182,6 +232,12 @@
                     <div class="value">10</div>
                 </div>
             </div>
+        </div>
+
+        <div id="game-buttons">
+            <button> Draw </button>
+            <button> Fold </button>
+            <button> Bet </button>
         </div>
 
     </div>
