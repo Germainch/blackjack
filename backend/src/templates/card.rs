@@ -3,7 +3,6 @@ use askama::Template;
 #[derive(Template)]
 #[template(path = "card.html")]
 #[macro_use]
-
 struct CardTemplate<'a>{
     value : &'a str,
     color : &'a str,

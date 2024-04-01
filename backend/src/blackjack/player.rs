@@ -1,10 +1,10 @@
-use crate::games::blackjack;
-use crate::games::blackjack::card::{Card, Value};
-use crate::games::blackjack::card::Value::Ace;
-use crate::games::blackjack::color::Color;
-use crate::games::blackjack::color::Color::{Club, Spade};
-use crate::games::blackjack::deck::Deck;
-use crate::games::blackjack::score::Score;
+use crate::blackjack;
+use crate::blackjack::card::{Card, Value};
+use crate::blackjack::card::Value::Ace;
+use crate::blackjack::color::Color;
+use crate::blackjack::color::Color::{Club, Spade};
+use crate::blackjack::deck::Deck;
+use crate::blackjack::score::Score;
 
 pub(crate) struct Player {
     name: String,
@@ -43,6 +43,7 @@ impl Player {
             }
         }
     }
+
     /// Adds the value of the drawn card to the player's score
     /// if the card is an ace, it can be an 11 or a 1 depending on what is the best for the player
      fn add_score(&mut self, card: &Card){

@@ -1,8 +1,8 @@
 use card::Card;
 use rand::random;
-use crate::games::blackjack::card;
+use crate::blackjack::card;
 use card::Value;
-use crate::games::blackjack::color::Color;
+use crate::blackjack::color::Color;
 
 pub(crate) struct Deck {
     cards: Vec<Card>,
@@ -25,7 +25,7 @@ impl Deck {
     }
 
 
-    /// Shuffles the deck of cards using the Fisher-Yates algorithm
+    /// Shuffles the deck.png of cards using the Fisher-Yates algorithm
     pub(crate) fn shuffle(&mut self){
         let mut j: u8;
         let mut tmp: Card;
@@ -39,8 +39,8 @@ impl Deck {
         }
     }
 
-    /// Draw a card from the deck
-    /// Pops the last card from the deck and returns it if the deck contains a card
+    /// Draw a card from the deck.png
+    /// Pops the last card from the deck.png and returns it if the deck.png contains a card
     pub(crate) fn draw(&mut self) -> Option<Card> {
         self.cards.pop()
     }
@@ -69,7 +69,7 @@ fn test_draw(){
     for i in 0..deck.cards.len() + 3 {
         let card = deck.draw();
         match card {
-            None => { println!("deck vide")}
+            None => { println!("deck.png vide")}
             Some(c) => {c.print()}
         }
         println!("number of cards remaining {}", deck.cards.len())

@@ -1,0 +1,189 @@
+<style>
+    .card-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 20px;
+        gap: 10px;
+    }
+    .card{
+        background-color: lightyellow;
+        padding: 20px;
+        border: 1px solid black;
+        border-radius: 3px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: grid;
+        justify-items: center;
+    }
+
+    .card-back {
+        background-color: #d4a373; /* Rustic brown */
+        border-radius: 10px; /* Rounded corners */
+        width: 100px; /* Width of the card */
+        height: 150px; /* Height of the card */
+        border: 2px solid #896F5F; /* Darker border */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+    }
+
+    .color{
+        position: relative;
+        font-size: 50px;
+        color: #000;
+    }
+
+    .value{
+        position: relative;
+        font-size: 30px;
+        color: #000;
+    }
+
+    body {
+        background: #001023;
+    }
+
+    #canvas{
+        background: darkslategrey;
+        position: relative;
+        width: 90vw;
+        height: 90vh;
+        display: grid;
+        border: 2px dashed black;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cpu-panel{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .player-panel{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #game-buttons{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+        padding: 20px;
+        gap: 10px;
+    }
+
+    #game-buttons button {
+        background-color: #d4a373; /* Rustic brown */
+        color: #fff; /* White text */
+        padding: 10px 20px; /* Padding */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        font-size: 16px; /* Font size */
+        font-weight: bold; /* Bold text */
+        cursor: pointer; /* Cursor style */
+        text-transform: uppercase; /* Uppercase text */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+    }
+    #game-buttons button:hover{
+        background-color: #b58657;
+    }
+    #game-buttons button:active{
+        transform: translateY(1px);
+    }
+
+    .score{
+
+    }
+
+    .score:hover{
+        background-color: #b58657;
+    }
+
+    #cpu-info{
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        font-size: 30px;
+        gap: 100px;
+    }
+
+    #player-info{
+        display: flex;
+        align-content: center;
+        align-items: center;
+        font-size: 30px;
+        justify-content: space-between;
+
+        background-color: darkseagreen; /* Rustic brown */
+        color: black; /* White text */
+        padding: 10px 20px; /* Padding */
+        border-radius: 5px; /* Rounded corners */
+        font-weight: bold; /* Bold text */
+        text-align: center; /* Center-align text */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+        width: 60vw;
+    }
+
+</style>
+<body>
+<main>
+    <div id="canvas">
+
+
+
+        <!-- CPU SIDE -->
+        <div class="cpu-panel">
+            <div id="cpu-deck" class="card-container">
+
+                <div class="card">
+                    <div class="color">&heartsuit;</div>
+                    <div class="value">K</div>
+                </div>
+
+                <div class="card">
+                    <div class="color">&heartsuit;</div>
+                    <div class="value">Q</div>
+                </div>
+                <div class="card">
+                    <div class="color">&spades;</div>
+                    <div class="value">J</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cpu-info">
+            <div id="cpu-score" class="score">
+                score:
+            </div>
+            <img src="../deck" alt="deck" class="card-back">
+        </div>
+
+
+        <div id="game-buttons">
+            <button> Draw </button>
+            <button> Fold </button>
+            <button> Bet </button>
+        </div>
+
+        <!-- PLAYER SIDE -->
+        <div id="player-info">
+            <div id="money-bet"> bet : </div>
+            <div id="player-score" class="score">score :</div>
+            <div id="player-money"> bank :</div>
+        </div>
+
+        <div class="player-panel">
+            <div id="player-deck" class="card-container">
+                <div class="card">
+                    <div class="color">&spades;</div>
+                    <div class="value">10</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>

@@ -1,8 +1,7 @@
-use std::io;
-use std::io::BufRead;
-use crate::games::blackjack::deck::Deck;
-use crate::games::blackjack::player::Player;
-use crate::games::blackjack::score::Score;
+
+use crate::blackjack::deck::Deck;
+use crate::blackjack::player::Player;
+use crate::blackjack::score::Score;
 
 
 pub struct Blackjack {
@@ -49,7 +48,7 @@ impl Blackjack {
         }
         match self.cpu.score(){
             0..=16 => {self.cpu.draw_card(&mut self.deck)}
-            _      => {self.has_cpu_fold = true}
+                 _ => {self.has_cpu_fold = true}
         }
     }
 

@@ -1,0 +1,35 @@
+
+
+<button hx-get="/game" hx-target="body" hx-swap="outerHTML" class="start-button">Start Game</button>
+
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .start-button {
+    padding: 20px 40px;
+    font-size: 24px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+  }
+  .start-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+
+

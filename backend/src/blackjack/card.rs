@@ -1,7 +1,7 @@
 use color::Color;
-use crate::games::blackjack::card::Value::{Ace, Eight, Five, Four, Jack, King, Nine, Queen, Seven, Six, Ten, Three, Two};
-use crate::games::blackjack::color;
-use crate::games::blackjack::color::Color::Club;
+use crate::blackjack::card::Value::{Ace, Eight, Five, Four, Jack, King, Nine, Queen, Seven, Six, Ten, Three, Two};
+use crate::blackjack::color;
+use crate::blackjack::color::Color::Club;
 
 #[derive(Copy, Clone)]
 pub struct Card {

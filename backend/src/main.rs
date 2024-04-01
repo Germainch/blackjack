@@ -1,52 +1,66 @@
+use std::collections::HashMap;
 use std::fs::{File, read_to_string};
-use std::io::Read;
+use std::io;
+use std::io::{Read, Write};
 use std::ops::Add;
-use askama::{Html, Template};
-use rouille::{Request, router};
-use rouille::Response;
-use crate::games::blackjack::blackjack::Blackjack;
+use std::sync::Mutex;
+use askama::Template;
+use rouille::{log, post_input, Request, Response, router, session, try_or_400};
+use crate::server::{handle_route, SessionData};
 
-mod games;
 mod templates;
-mod db;
+pub(crate) mod blackjack;
+mod server;
+mod users;
 
-fn concat_html_css(html: &str, css: &str) -> String{
-    let mut concat:String = String::new();
-    concat = html.to_owned() + "<style>" + css + "</style>";
-    concat
-}
 
 fn main() {
-    let mut blackjack: Blackjack = Blackjack::new(db::accounts::FRANCIS);
+
+    let sessions_storage: Mutex<HashMap<String, SessionData>> = Mutex::new(HashMap::new());
 
     rouille::start_server("localhost:8000", move |request| {
-        router!(request,
-            (GET) (/) => {
 
-                // combine css and html files to serve
 
-                let mut html_stringified: String = read_to_string("../site/dist/index.html").unwrap();
+        rouille::log(&request, io::stdout(), || {
+            rouille::session::session(request, "SID", 3600, |session| {
 
-                // TODO : récupérer le fichier sans passer par le nom ou alors trouver un moyen de servir le dossier du front
-                let mut css_stringified: String = read_to_string("../site/dist/assets/index-BtvWOTnS.css").unwrap();
+                let mut session_data;
 
-                let html_css = concat_html_css(html_stringified.as_str(), css_stringified.as_str());
+                if session.client_has_sid(){
+                    match sessions_storage.lock().unwrap().get(session.id()){
+                        None => {
+                            session_data = None;
+                        }
+                        Some(data) => {
+                            session_data = Some(data.clone());
+                        }
+                    }
+                }
+                else {
+                    session_data = None;
+                }
 
-                rouille::Response::html(html_css)
-            },
+                let response = handle_route(&request, &mut session_data);
 
-            (POST) (/games/blackjack/run) => {
-                rouille::Response::text("cpartie")
-            },
-            (POST) (/games/blackjack/draw) => {
-                blackjack.turn();
-                rouille::Response::html("<p>allors comme ça</p>")
+                match session_data {
+                    None => {
+                        if session.client_has_sid() {
+                            // If `handle_route` erased the content of the `Option`, we remove the session
+                            // from the storage. This is only done if the client already has an identifier,
+                            // otherwise calling `session.id()` will assign one.
+                            sessions_storage.lock().unwrap().remove(session.id());
+                        }
+                    }
+                    Some(d) => {
+                        sessions_storage.lock().unwrap().insert(session.id().to_owned(), d);
+                    }
+                };
 
-            },
-            (GET) (/hello) => {
-                rouille::Response::text(templates::hello::template_to_string())
-            },
-            _ => rouille::Response::empty_404()
-        )
+                // During the whole handling of the request, the `sessions_storage` mutex was only
+                // briefly locked twice. This shouldn't have a lot of influence on performances.
+
+                response
+            })
+        })
     });
 }
