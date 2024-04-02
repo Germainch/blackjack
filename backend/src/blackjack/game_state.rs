@@ -1,16 +1,16 @@
+use std::cmp::Ordering;
 use crate::blackjack::card::Card;
 use crate::blackjack::card::Value::Ace;
 use crate::blackjack::deck::Deck;
 use crate::blackjack::game_state::GameResult::{Draw, Lose, OnGoing, Win};
 use crate::blackjack::game_state::Player::{Cpu, Human};
 
-
-enum Player{
+enum Player {
     Human,
     Cpu,
 }
 
-pub(crate) enum GameResult{
+pub(crate) enum GameResult {
     Win,
     Lose,
     Draw,
@@ -18,7 +18,6 @@ pub(crate) enum GameResult{
 }
 
 pub struct Blackjack {
-
     deck: Deck,
     player_hand: Vec<Card>,
     cpu_hand: Vec<Card>,
@@ -32,13 +31,15 @@ pub struct Blackjack {
     game_result: GameResult,
 }
 
-
 impl Blackjack {
+    /// constructor for a new game of blackjack
     pub fn new() -> Blackjack {
         let mut deck = Deck::new();
-        for i in 0..=4 { deck.shuffle(); }
+        for _i in 0..=4 {
+            deck.shuffle();
+        }
 
-        Blackjack{
+        Blackjack {
             player_money: 1000,
             player_bet: 0,
             player_hand: Vec::new(),
@@ -52,17 +53,14 @@ impl Blackjack {
         }
     }
 
-    /// plays a turn for the player when draw or fold is clicked
-    pub fn player_draw(&mut self){
-        if self.is_game_over(){
-            return;
-        }
+    /// plays a turn for the player when he draws a card
+    pub fn player_draw(&mut self) {
+        if !self.is_game_over() {
 
-        else {
             self.draw_card(Human);
             self.calculate_score(Human);
             if self.player_score >= 21 {
-                self.has_player_fold = true ;
+                self.has_player_fold = true;
                 self.cpu_loop();
                 self.check_victory();
                 self.update_earnings();
@@ -70,10 +68,11 @@ impl Blackjack {
         }
     }
 
-    pub fn player_fold(&mut self){
+    /// performs the fold action for the player then plays the AI turns and end game functions
+    pub fn player_fold(&mut self) {
         //early return if player has already fold
-        if self.has_player_fold{
-            return
+        if self.has_player_fold {
+            return;
         }
         self.has_player_fold = true;
         self.cpu_loop();
@@ -82,38 +81,41 @@ impl Blackjack {
     }
 
     /// cpu ai turn
-    fn cpu_turn(&mut self){
+    fn cpu_turn(&mut self) {
         if self.has_cpu_fold {
             return;
         }
         match self.cpu_score {
-            0..=16 => { self.draw_card( Player::Cpu ); self.calculate_score(Cpu); }
-                 _ => { self.has_cpu_fold = true }
+            0..=16 => {
+                self.draw_card(Player::Cpu);
+                self.calculate_score(Cpu);
+            }
+            _ => self.has_cpu_fold = true,
         }
     }
 
-
-    fn draw_card(&mut self, player: Player){
-
-        let card= self.deck.draw().unwrap();
+    /// draws a card from the deck into a player's hand
+    fn draw_card(&mut self, player: Player) {
+        let card = self.deck.draw().unwrap();
 
         match player {
-            Player::Human => {self.player_hand.push(card)}
-            Player::Cpu => {self.cpu_hand.push(card)}
+            Player::Human => self.player_hand.push(card),
+            Player::Cpu => self.cpu_hand.push(card),
         }
     }
 
-    fn calculate_score(&mut self, player: Player){
+    /// takes a player's hand and calculates its score
+    fn calculate_score(&mut self, player: Player) {
         let mut score = 0;
         match player {
             Player::Human => {
-                for card in &self.player_hand{
+                for card in &self.player_hand {
                     score = self.add_score(card, score);
                 }
                 self.player_score = score;
             }
             Player::Cpu => {
-                for card in &self.cpu_hand{
+                for card in &self.cpu_hand {
                     score = self.add_score(card, score);
                 }
                 self.cpu_score = score;
@@ -121,122 +123,112 @@ impl Blackjack {
         }
     }
 
-    fn add_score(&self, card: &Card, score: u32) -> u32{
+    /// adds the score of a card to a score
+    fn add_score(&self, card: &Card, score: u32) -> u32 {
         let mut new_score = score;
-        match card.value(){
+        match card.value() {
             Ace => {
                 if new_score <= 10 {
                     new_score += 11;
-                }
-                else {
+                } else {
                     new_score += 1;
                 }
             }
-            _ => new_score +=  card.value().value_to_int() as u32,
+            _ => new_score += card.value().value_to_int() as u32,
         }
 
         new_score
     }
 
-
-    fn cpu_loop(&mut self){
-        while !self.has_cpu_fold{
+    /// plays the bot turns after the player has finished playing
+    fn cpu_loop(&mut self) {
+        while !self.has_cpu_fold {
             self.cpu_turn();
         }
     }
 
-    fn is_game_over(&self) -> bool{
-        return self.has_player_fold && self.has_cpu_fold
+    /// checks if the game is over
+    fn is_game_over(&self) -> bool {
+        self.has_player_fold && self.has_cpu_fold
     }
 
-    pub(crate) fn bet(&mut self){
+    /// increase the player's bet by 100
+    pub(crate) fn bet(&mut self) {
         if self.is_game_over() {
-            return
+            return;
         }
-        if self.player_money < 100{
-            self.mafia_is_coming();
-        }
-        else{
+        if self.player_money < 100 {
+            println!("not enough money to bet")
+        } else {
             self.player_money -= 100;
             self.player_bet += 100;
         }
     }
 
-    fn mafia_is_coming(&self){
-        println!("envoyer carte bleue");
-    }
-
-    fn update_earnings(&mut self){
-        match self.game_result{
+    /// updates the bank and the bet of the player
+    fn update_earnings(&mut self) {
+        match self.game_result {
             Win => {
-                println!( " YOU WON !");
+                println!(" YOU WON !");
                 self.player_money += self.player_bet * 2;
             }
             Lose => {
-                println!( " YOU LOSE !");
+                println!(" YOU LOSE !");
             }
             Draw => {
-                println!( " DRAW !");
+                println!(" DRAW !");
                 self.player_money += self.player_bet;
             }
-            OnGoing => { println!( "Game is on going!");}
+            OnGoing => {
+                println!("Game is on going!");
+            }
         }
         self.player_bet = 0;
     }
-    /// checks if the game is over and returns the winner
-    pub fn check_victory(&mut self){
-        let mut result = OnGoing;
 
-        match self.player_score{
+    /// checks if the game is over and sets the winner
+    pub fn check_victory(&mut self) {
+        match self.player_score {
             // player score in range 0-21
-            0..=21 => {
-                match self.cpu_score {
-                    0..=21 => {
-                        if self.cpu_score == self.player_score{
-                            self.game_result = Draw;
-                            return;
-                        }
-                        else if self.cpu_score < self.player_score{
-                            self.game_result = Win;
-                            return;
-                        }
-                        else {
-                            self.game_result = Lose;
-                            return;
-                        }
-                    }
+            0..=21 => match self.cpu_score {
+                0..=21 => {
 
-                    _ =>{
-                        self.game_result = Win;
-                        return;
+                    match self.cpu_score.cmp(&self.player_score){
+                        Ordering::Less => {self.game_result = Win}
+                        Ordering::Equal => {self.game_result = Draw}
+                        Ordering::Greater => {self.game_result = Lose}
                     }
                 }
-            }
+
+                _ => {
+                    self.game_result = Win;
+                }
+            },
 
             // player score above 21
-            _ => {
-                match self.cpu_score{
-                    0..=21 => {
-                        self.game_result = Lose;
-                        return;
-                    }
-                    _ => {
-                        self.game_result = Draw;
-                        return;
-                    }
+            _ => match self.cpu_score {
+                0..=21 => {
+                    self.game_result = Lose;
                 }
-            }
+                _ => {
+                    self.game_result = Draw;
+                }
+            },
         }
     }
 
-    pub fn printstate(&self){
+    /// prints the state of the game object
+    fn printstate(&self) {
         println!(" ----------------- Game state -------------------- ");
         println!("player score : {}", self.player_score);
         println!("cpu score : {}", self.cpu_score);
-        println!("has player fold : {}", self.has_player_fold);
-        println!("has cpu fold : {}", self.has_cpu_fold);
+        println!("has player fold : {}", self.has_player_fold());
+        println!("has cpu fold : {}", self.has_cpu_fold());
+        println!("deck size : {}", self.deck().cards().len());
         println!(" ------------------------------------- ");
     }
+
+    // ***************** GETTERS ***************************
     pub fn deck(&self) -> &Deck {
         &self.deck
     }
@@ -261,4 +253,11 @@ impl Blackjack {
     pub fn game_result(&self) -> &GameResult {
         &self.game_result
     }
+}
+
+// ********************************* TESTING *********************************
+#[test]
+fn test_construction(){
+    let game = Blackjack::new();
+    game.printstate();
 }

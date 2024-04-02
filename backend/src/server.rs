@@ -1,39 +1,36 @@
+use crate::blackjack::games_list::GameList;
+use rouille::{post_input, router, try_or_400, Request, Response};
 use std::fs::File;
 use std::io;
 use std::io::Read;
 use std::io::Write;
-use rouille::{post_input, Request, Response, router, try_or_400};
-use crate::blackjack::games_list::GameList;
 
-use crate::users::is_user;
 use crate::templates::bet;
 use crate::templates::bet::bet_to_string;
 use crate::templates::canvas::canvas_to_string;
+use crate::users::is_user;
 
-#[derive(Debug,Clone)]
-pub(crate) struct SessionData{
+#[derive(Debug, Clone)]
+pub(crate) struct SessionData {
     login: String,
 }
 
-pub(crate) fn concat_html_css(html: &str, css: &str) -> String{
-    let mut concat:String = String::new();
-    concat = html.to_owned() + "<style>" + css + "</style>";
-    concat
-}
-
-pub(crate) fn handle_route(request: &Request, session_data: &mut Option<SessionData>, game_list: &mut GameList) -> Response {
+pub(crate) fn handle_route(
+    request: &Request,
+    session_data: &mut Option<SessionData>,
+    game_list: &mut GameList,
+) -> Response {
     match session_data {
         // the client is not logged in
-        None => {
-            handle_route_not_logged_in(request, session_data)
-        }
+        None => handle_route_not_logged_in(request, session_data),
         // the client is logged in
-        Some(s) => {
-            handle_route_logged_in(request, session_data, game_list)
-        }
+        Some(_s) => handle_route_logged_in(request, session_data, game_list),
     }
 }
-pub(crate) fn handle_route_not_logged_in(request:&Request, session_data: &mut Option<SessionData>) -> Response {
+pub(crate) fn handle_route_not_logged_in(
+    request: &Request,
+    session_data: &mut Option<SessionData>,
+) -> Response {
     router!(request,
 
         (GET) (/) => {
@@ -61,10 +58,10 @@ pub(crate) fn handle_route_not_logged_in(request:&Request, session_data: &mut Op
              match check_login(&data.login, &data.password){
                 Ok(()) => {
                     *session_data = Some(SessionData{ login: data.login });
-                    return Response::redirect_303("/start_game");
+                    Response::redirect_303("/start_game")
                 }
                 Err(_) => {
-                    return Response::html("wrong login/password");
+                    Response::html("wrong login/password")
                 }
             }
         },
@@ -72,7 +69,11 @@ pub(crate) fn handle_route_not_logged_in(request:&Request, session_data: &mut Op
         _ => Response::empty_404()
     )
 }
-pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Option<SessionData>, game_list: &mut GameList) -> Response{
+pub(crate) fn handle_route_logged_in(
+    request: &Request,
+    session_data: &mut Option<SessionData>,
+    game_list: &mut GameList,
+) -> Response {
     router!(request,
         (GET) (/) => {
             Response::redirect_303("/start_game")
@@ -173,15 +174,14 @@ pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Optio
             return Response::html(r#"LoggedOut"#)
         },
 
-
         _ => Response::empty_404()
     )
 }
 
-pub(crate) fn check_login(login:&str,password: &str) -> Result<(),()>{
+pub(crate) fn check_login(login: &str, password: &str) -> Result<(), ()> {
     // checking if the db has the combination of log/password
-    if is_user(login,password){
+    if is_user(login, password) {
         return Ok(());
     }
-    return Err(());
+    Err(())
 }

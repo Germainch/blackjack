@@ -9,9 +9,12 @@ struct BetTemplate {
 }
 
 pub fn bet_to_string(value: u32, bank: u32) -> String {
-    let bet = BetTemplate{bet: value, bank};
-    match bet.render(){
-        Ok(s) => { s }
-        Err(e) => { println!( "{}", e ); String::new()}
+    let bet = BetTemplate { bet: value, bank };
+    match bet.render() {
+        Ok(s) => s,
+        Err(e) => {
+            println!("{}", e);
+            String::new()
+        }
     }
 }
