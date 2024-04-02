@@ -4,7 +4,6 @@ use askama::Template;
 
 #[derive(Template)]
 #[template(path = "card.html")]
-#[macro_use]
 pub(crate) struct CardTemplate<'a> {
     pub value: &'a str,
     pub color: &'a str,
@@ -16,7 +15,6 @@ pub fn hand_to_templates(hand: &Vec<Card>) -> Vec<CardTemplate> {
     let mut value;
 
     for card in hand {
-
         match card.color() {
             Color::Club => color = "♣",
             Color::Diamond => color = "♦",

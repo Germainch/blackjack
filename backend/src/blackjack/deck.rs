@@ -8,6 +8,7 @@ pub(crate) struct Deck {
     cards: Vec<Card>,
 }
 
+#[allow(unused)]
 impl Deck {
     /// Creates a new Deck of 52 cards
     pub(crate) fn new() -> Deck {
@@ -47,6 +48,7 @@ impl Deck {
             self.cards[i].print();
         }
     }
+
     pub fn cards(&self) -> &Vec<Card> {
         &self.cards
     }
@@ -56,7 +58,7 @@ impl Deck {
 #[test]
 fn test_new_deck_and_shuffle() {
     let mut d: Deck = Deck::new();
-    for i in 0..3 {
+    for _i in 0..3 {
         d.shuffle();
     }
     d.print();
@@ -65,7 +67,7 @@ fn test_new_deck_and_shuffle() {
 #[test]
 fn test_draw() {
     let mut deck: Deck = Deck::new();
-    for i in 0..deck.cards.len() + 3 {
+    for _i in 0..deck.cards.len() + 3 {
         let card = deck.draw();
         match card {
             None => {

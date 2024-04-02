@@ -2,7 +2,6 @@ use crate::blackjack::card::Value::{
     Ace, Eight, Five, Four, Jack, King, Nine, Queen, Seven, Six, Ten, Three, Two,
 };
 use crate::blackjack::color;
-use crate::blackjack::color::Color::Club;
 use color::Color;
 
 #[derive(Copy, Clone)]
@@ -76,11 +75,11 @@ impl Value {
     }
 }
 
+#[allow(unused)]
 impl Card {
     pub fn new(value: Value, color: Color) -> Self {
         Card { value, color }
     }
-
 
     pub fn print(&self) {
         println!("{:?}; {}", self.value, self.color)
@@ -102,6 +101,6 @@ fn test_card_creation() {
 #[test]
 fn test_value_by_id() {
     let v: Value = Value::value_by_id(3);
-    let c: Card = Card::new(v, Club);
+    let c: Card = Card::new(v, Color::Club);
     c.print();
 }

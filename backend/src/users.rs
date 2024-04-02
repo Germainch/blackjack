@@ -1,5 +1,3 @@
-use rouille::url::quirks::password;
-
 struct User<'a> {
     name: &'a str,
     password: &'a str,
@@ -11,7 +9,7 @@ const USER_LIST: [User; 3] = [
         password: "1234",
     },
     User {
-        name: "Patrick",
+        name: "Emma",
         password: "0000",
     },
     User {

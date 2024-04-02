@@ -1,9 +1,9 @@
-use std::cmp::Ordering;
 use crate::blackjack::card::Card;
 use crate::blackjack::card::Value::Ace;
 use crate::blackjack::deck::Deck;
 use crate::blackjack::game_state::GameResult::{Draw, Lose, OnGoing, Win};
 use crate::blackjack::game_state::Player::{Cpu, Human};
+use std::cmp::Ordering;
 
 enum Player {
     Human,
@@ -31,6 +31,7 @@ pub struct Blackjack {
     game_result: GameResult,
 }
 
+#[allow(unused)]
 impl Blackjack {
     /// constructor for a new game of blackjack
     pub fn new() -> Blackjack {
@@ -56,7 +57,6 @@ impl Blackjack {
     /// plays a turn for the player when he draws a card
     pub fn player_draw(&mut self) {
         if !self.is_game_over() {
-
             self.draw_card(Human);
             self.calculate_score(Human);
             if self.player_score >= 21 {
@@ -87,7 +87,7 @@ impl Blackjack {
         }
         match self.cpu_score {
             0..=16 => {
-                self.draw_card(Player::Cpu);
+                self.draw_card(Cpu);
                 self.calculate_score(Cpu);
             }
             _ => self.has_cpu_fold = true,
@@ -99,8 +99,8 @@ impl Blackjack {
         let card = self.deck.draw().unwrap();
 
         match player {
-            Player::Human => self.player_hand.push(card),
-            Player::Cpu => self.cpu_hand.push(card),
+            Human => self.player_hand.push(card),
+            Cpu => self.cpu_hand.push(card),
         }
     }
 
@@ -108,13 +108,13 @@ impl Blackjack {
     fn calculate_score(&mut self, player: Player) {
         let mut score = 0;
         match player {
-            Player::Human => {
+            Human => {
                 for card in &self.player_hand {
                     score = self.add_score(card, score);
                 }
                 self.player_score = score;
             }
-            Player::Cpu => {
+            Cpu => {
                 for card in &self.cpu_hand {
                     score = self.add_score(card, score);
                 }
@@ -191,14 +191,11 @@ impl Blackjack {
         match self.player_score {
             // player score in range 0-21
             0..=21 => match self.cpu_score {
-                0..=21 => {
-
-                    match self.cpu_score.cmp(&self.player_score){
-                        Ordering::Less => {self.game_result = Win}
-                        Ordering::Equal => {self.game_result = Draw}
-                        Ordering::Greater => {self.game_result = Lose}
-                    }
-                }
+                0..=21 => match self.cpu_score.cmp(&self.player_score) {
+                    Ordering::Less => self.game_result = Win,
+                    Ordering::Equal => self.game_result = Draw,
+                    Ordering::Greater => self.game_result = Lose,
+                },
 
                 _ => {
                     self.game_result = Win;
@@ -218,7 +215,7 @@ impl Blackjack {
     }
 
     /// prints the state of the game object
-    fn printstate(&self) {
+    fn print_state(&self) {
         println!(" ----------------- Game state -------------------- ");
         println!("player score : {}", self.player_score);
         println!("cpu score : {}", self.cpu_score);
@@ -257,7 +254,7 @@ impl Blackjack {
 
 // ********************************* TESTING *********************************
 #[test]
-fn test_construction(){
+fn test_construction() {
     let game = Blackjack::new();
-    game.printstate();
+    game.print_state();
 }

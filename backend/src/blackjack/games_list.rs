@@ -1,6 +1,5 @@
 use crate::blackjack::game_state::Blackjack;
 use std::collections::HashMap;
-use std::iter::Map;
 
 pub struct GameList {
     game_list: HashMap<String, Blackjack>,

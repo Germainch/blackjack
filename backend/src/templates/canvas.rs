@@ -1,13 +1,11 @@
-use crate::blackjack::card::Card;
 use crate::blackjack::game_state::Blackjack;
 use crate::blackjack::game_state::GameResult;
-use crate::blackjack::game_state::GameResult::OnGoing;
+
 use crate::templates::card::{hand_to_templates, CardTemplate};
 use askama::Template;
 
 #[derive(Template)]
 #[template(path = "canvas.html")]
-#[macro_use]
 struct CanvasTemplate<'a> {
     player_score: u32,
     cpu_score: u32,

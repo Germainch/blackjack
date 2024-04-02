@@ -5,7 +5,6 @@ use std::io;
 use std::io::Read;
 use std::io::Write;
 
-use crate::templates::bet;
 use crate::templates::bet::bet_to_string;
 use crate::templates::canvas::canvas_to_string;
 use crate::users::is_user;

@@ -1,13 +1,11 @@
 use crate::blackjack::games_list::GameList;
 use crate::server::{handle_route, SessionData};
-use askama::Template;
-use rouille::{log, post_input, router, session, try_or_400, Request, Response};
+
 use std::collections::HashMap;
-use std::fs::{read_to_string, File};
+
 use std::io;
-use std::io::{Read, Write};
-use std::ops::Add;
-use std::sync::{Mutex, MutexGuard};
+
+use std::sync::Mutex;
 
 pub(crate) mod blackjack;
 mod server;
