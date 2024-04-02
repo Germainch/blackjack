@@ -117,7 +117,7 @@ pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Optio
 
             let game = game_list.find_game(login);
 
-            match game{
+            match game {
                 None => { Response::empty_404() }
                 Some(g) => {
                     g.bet();
@@ -128,6 +128,22 @@ pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Optio
                 }
             }
 
+        },
+
+        (POST) (/draw) => {
+            let login = session_data.to_owned().unwrap().login;
+
+            let game = game_list.find_game(login);
+
+            match game {
+                None => { Response::empty_404() }
+                Some(g) => {
+                    g.player_draw();
+
+                    let canvas = canvas_to_string(g);
+                    Response::html(canvas)
+                }
+            }
         },
 
         (POST) (/logout) => {

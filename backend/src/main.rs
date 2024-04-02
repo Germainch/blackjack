@@ -3,7 +3,7 @@ use std::fs::{File, read_to_string};
 use std::io;
 use std::io::{Read, Write};
 use std::ops::Add;
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
 use askama::Template;
 use rouille::{log, post_input, Request, Response, router, session, try_or_400};
 use crate::blackjack::games_list::GameList;
@@ -18,7 +18,7 @@ mod users;
 fn main() {
 
     let sessions_storage: Mutex<HashMap<String, SessionData>> = Mutex::new(HashMap::new());
-
+    let mut games_storage  = Mutex::new(GameList::new());
 
     rouille::start_server("localhost:8000", move |request| {
 
@@ -27,7 +27,7 @@ fn main() {
         rouille::log(&request, io::stdout(), || {
             rouille::session::session(request, "SID", 3600, |session| {
 
-                let mut game_list: GameList = GameList::new();
+
                 let mut session_data;
 
                 if session.client_has_sid(){
@@ -43,6 +43,10 @@ fn main() {
                 else {
                     session_data = None;
                 }
+
+
+                let mut game_list = games_storage.lock().unwrap();
+
 
                 let response = handle_route(&request, &mut session_data, &mut game_list);
 

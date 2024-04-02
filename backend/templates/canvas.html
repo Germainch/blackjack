@@ -177,6 +177,12 @@
             <div id="cpu-deck" class="card-container">
 
                 <!-- Cards -->
+                {% for card in cpu_hand %}
+                <div class="card">
+                    <div class="color"> {{ card.color }} </div>
+                    <div class="value"> {{ card.value }} </div>
+                </div>
+                {% endfor %}
 
             </div>
         </div>

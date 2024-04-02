@@ -8,8 +8,8 @@ struct BetTemplate {
     bank: u32,
 }
 
-pub fn bet_to_string(value: u32, inital_bank: u32) -> String {
-    let bet = BetTemplate{bet: value, bank: (inital_bank - value)};
+pub fn bet_to_string(value: u32, bank: u32) -> String {
+    let bet = BetTemplate{bet: value, bank};
     match bet.render(){
         Ok(s) => { s }
         Err(e) => { println!( "{}", e ); String::new()}

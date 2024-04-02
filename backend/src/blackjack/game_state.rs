@@ -4,7 +4,6 @@ use crate::blackjack::deck::Deck;
 use crate::blackjack::game_state::GameResult::{Draw, Lose, Win};
 use crate::blackjack::game_state::Player::{Cpu, Human};
 
-use crate::blackjack::score::Score;
 
 enum Player{
     Human,
@@ -59,13 +58,14 @@ impl Blackjack {
 
     /// plays a turn for the player when draw or fold is clicked
     pub fn player_draw(&mut self){
-
-        self.draw_card(Human);
-        self.calculate_score(Human);
-        if self.player_score > 21 { self.has_player_fold = true }
         if self.check_game_over(){
             let game_result = self.check_victory();
             self.update_earnings(game_result);
+        }
+        else {
+            self.draw_card(Human);
+            self.calculate_score(Human);
+            if self.player_score >= 21 { self.has_player_fold = true }
         }
     }
 
@@ -83,7 +83,7 @@ impl Blackjack {
             return;
         }
         match self.cpu_score {
-            0..=16 => { self.draw_card( Player::Cpu ) }
+            0..=16 => { self.draw_card( Player::Cpu ); self.calculate_score(Cpu); }
                  _ => { self.has_cpu_fold = true }
         }
     }
@@ -151,8 +151,10 @@ impl Blackjack {
         if self.player_money < 100{
             self.mafia_is_coming();
         }
-        self.player_money -= 100;
-        self.player_bet += 100;
+        else{
+            self.player_money -= 100;
+            self.player_bet += 100;
+        }
     }
 
     fn mafia_is_coming(&self){
@@ -249,13 +251,4 @@ impl Blackjack {
     pub fn has_cpu_fold(&self) -> bool {
         self.has_cpu_fold
     }
-}
-
-#[test]
-fn test_game(){
-    let mut game = Blackjack::new("Bob");
-    for i in 0..4{
-        game.turn();
-    }
-    game.printstate();
 }
