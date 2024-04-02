@@ -2,6 +2,8 @@ use askama::Template;
 use crate::blackjack::game_state::Blackjack;
 use crate::blackjack::card::Card;
 use crate::templates::card::{CardTemplate, hand_to_templates};
+use crate::blackjack::game_state::GameResult;
+use crate::blackjack::game_state::GameResult::OnGoing;
 
 #[derive(Template)]
 #[template(path = "canvas.html")]
@@ -13,6 +15,7 @@ struct CanvasTemplate<'a> {
     cpu_hand: &'a Vec<CardTemplate<'a>>,
     bet : u32,
     bank: u32,
+    game_result: &'a GameResult,
 }
 
 
@@ -24,6 +27,7 @@ pub fn canvas_to_string_1(game: &Blackjack) -> String {
         cpu_hand: &vec![],
         bet: 0,
         bank: 0,
+        game_result: &OnGoing,
     };
     return canvas.render().unwrap();
 }
@@ -36,6 +40,7 @@ pub fn canvas_to_string(game: &Blackjack) -> String {
         cpu_hand: &hand_to_templates(game.cpu_hand()),
         bet: game.player_bet(),
         bank: game.player_money(),
+        game_result: game.game_result(),
     };
     return canvas.render().unwrap();
 }

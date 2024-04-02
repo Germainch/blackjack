@@ -18,5 +18,8 @@ impl GameList {
     pub fn add_game(&mut self, login: String){
         self.game_list.insert(login, Blackjack::new());
     }
+    pub fn remove_game(&mut self, login:String){
+        self.game_list.remove(&login);
+    }
 }
 

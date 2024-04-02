@@ -1,7 +1,7 @@
 use crate::blackjack::card::Card;
 use crate::blackjack::card::Value::Ace;
 use crate::blackjack::deck::Deck;
-use crate::blackjack::game_state::GameResult::{Draw, Lose, Win};
+use crate::blackjack::game_state::GameResult::{Draw, Lose, OnGoing, Win};
 use crate::blackjack::game_state::Player::{Cpu, Human};
 
 
@@ -10,10 +10,11 @@ enum Player{
     Cpu,
 }
 
-enum GameResult{
+pub(crate) enum GameResult{
     Win,
     Lose,
     Draw,
+    OnGoing,
 }
 
 pub struct Blackjack {
@@ -24,13 +25,11 @@ pub struct Blackjack {
     player_money: u32,
     player_bet: u32,
 
-    is_game_over: bool,
-    turn: u8,
-    is_black_jack: bool,
     has_player_fold: bool,
     has_cpu_fold: bool,
     pub player_score: u32,
     pub cpu_score: u32,
+    game_result: GameResult,
 }
 
 
@@ -47,10 +46,7 @@ impl Blackjack {
             deck,
             player_score: 0,
             cpu_score: 0,
-
-            is_game_over: false,
-            turn: 0,
-            is_black_jack: false,
+            game_result: OnGoing,
             has_player_fold: false,
             has_cpu_fold: false,
         }
@@ -58,28 +54,36 @@ impl Blackjack {
 
     /// plays a turn for the player when draw or fold is clicked
     pub fn player_draw(&mut self){
-        if self.check_game_over(){
-            let game_result = self.check_victory();
-            self.update_earnings(game_result);
+        if self.is_game_over(){
+            return;
         }
+
         else {
             self.draw_card(Human);
             self.calculate_score(Human);
-            if self.player_score >= 21 { self.has_player_fold = true }
+            if self.player_score >= 21 {
+                self.has_player_fold = true ;
+                self.cpu_loop();
+                self.check_victory();
+                self.update_earnings();
+            }
         }
     }
 
-    fn player_fold(&mut self){
-        self.has_player_fold = true;
-        if self.check_game_over(){
-            let game_result = self.check_victory();
-            self.update_earnings(game_result);
+    pub fn player_fold(&mut self){
+        //early return if player has already fold
+        if self.has_player_fold{
+            return
         }
+        self.has_player_fold = true;
+        self.cpu_loop();
+        self.check_victory();
+        self.update_earnings();
     }
 
     /// cpu ai turn
     fn cpu_turn(&mut self){
-        if self.is_game_over || self.has_cpu_fold {
+        if self.has_cpu_fold {
             return;
         }
         match self.cpu_score {
@@ -135,19 +139,20 @@ impl Blackjack {
     }
 
 
-    fn check_game_over(&mut self) -> bool{
-        if self.has_player_fold {
-            while !self.has_cpu_fold{
-                self.cpu_turn();
-            }
-            true
-        }
-        else {
-            false
+    fn cpu_loop(&mut self){
+        while !self.has_cpu_fold{
+            self.cpu_turn();
         }
     }
 
+    fn is_game_over(&self) -> bool{
+        return self.has_player_fold && self.has_cpu_fold
+    }
+
     pub(crate) fn bet(&mut self){
+        if self.is_game_over() {
+            return
+        }
         if self.player_money < 100{
             self.mafia_is_coming();
         }
@@ -161,62 +166,73 @@ impl Blackjack {
         println!("envoyer carte bleue");
     }
 
-    fn update_earnings(&mut self, result: GameResult){
-        match result{
+    fn update_earnings(&mut self){
+        match self.game_result{
             Win => {
+                println!( " YOU WON !");
                 self.player_money += self.player_bet * 2;
             }
             Lose => {
-
+                println!( " YOU LOSE !");
             }
             Draw => {
+                println!( " DRAW !");
                 self.player_money += self.player_bet;
             }
+            OnGoing => { println!( "Game is on going!");}
         }
         self.player_bet = 0;
     }
     /// checks if the game is over and returns the winner
-    pub fn check_victory(&self) -> GameResult {
+    pub fn check_victory(&mut self){
+        let mut result = OnGoing;
 
-        if self.player_score > 21{
-            if self.cpu_score <= 21{
-                Lose
-            }
-            else {
-                Draw
-            }
-        }
-        else if self.player_score == 21 {
-            if self.cpu_score == 21 {
-                Draw
-            }
-            else {
-                Win
-            }
-        }
+        match self.player_score{
+            // player score in range 0-21
+            0..=21 => {
+                match self.cpu_score {
+                    0..=21 => {
+                        if self.cpu_score == self.player_score{
+                            self.game_result = Draw;
+                            return;
+                        }
+                        else if self.cpu_score < self.player_score{
+                            self.game_result = Win;
+                            return;
+                        }
+                        else {
+                            self.game_result = Lose;
+                            return;
+                        }
+                    }
 
-        else if self.player_score < 21{
-            if self.cpu_score > 21{
-                Win
+                    _ =>{
+                        self.game_result = Win;
+                        return;
+                    }
+                }
             }
-            else if self.cpu_score < self.player_score {
-                Win
+
+            // player score above 21
+            _ => {
+                match self.cpu_score{
+                    0..=21 => {
+                        self.game_result = Lose;
+                        return;
+                    }
+                    _ => {
+                        self.game_result = Draw;
+                        return;
+                    }
+                }
             }
-            else if self.cpu_score == self.player_score{
-                Draw
-            }
-            else { Lose }
-        }
-        else {
-            Lose
         }
     }
 
     pub fn printstate(&self){
-        println!(" ----------------- Game state turn {} -------------------- ", self.turn);
+        println!(" ----------------- Game state -------------------- ");
         println!("player score : {}", self.player_score);
         println!("cpu score : {}", self.cpu_score);
-        println!("is game over : {}", self.is_game_over);
         println!("has player fold : {}", self.has_player_fold);
         println!("has cpu fold : {}", self.has_cpu_fold);
         println!(" ------------------------------------- ");
@@ -236,19 +252,13 @@ impl Blackjack {
     pub fn player_bet(&self) -> u32 {
         self.player_bet
     }
-    pub fn is_game_over(&self) -> bool {
-        self.is_game_over
-    }
-    pub fn turn(&self) -> u8 {
-        self.turn
-    }
-    pub fn is_black_jack(&self) -> bool {
-        self.is_black_jack
-    }
     pub fn has_player_fold(&self) -> bool {
         self.has_player_fold
     }
     pub fn has_cpu_fold(&self) -> bool {
         self.has_cpu_fold
+    }
+    pub fn game_result(&self) -> &GameResult {
+        &self.game_result
     }
 }

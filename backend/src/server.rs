@@ -107,6 +107,12 @@ pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Optio
             }
         },
 
+        (GET) (/new-game) => {
+            let login = session_data.to_owned().unwrap().login;
+            game_list.remove_game(login);
+            Response::redirect_303("/game")
+        },
+
         (GET) (/deck) => {
             let image = File::open("deck.png").unwrap();
             Response::from_file("image/png", image)
@@ -139,6 +145,22 @@ pub(crate) fn handle_route_logged_in(request: &Request, session_data: &mut Optio
                 None => { Response::empty_404() }
                 Some(g) => {
                     g.player_draw();
+
+                    let canvas = canvas_to_string(g);
+                    Response::html(canvas)
+                }
+            }
+        },
+
+        (POST) (/fold) => {
+            let login = session_data.to_owned().unwrap().login;
+
+            let game = game_list.find_game(login);
+
+            match game {
+                None => { Response::empty_404() }
+                Some(g) => {
+                    g.player_fold();
 
                     let canvas = canvas_to_string(g);
                     Response::html(canvas)
