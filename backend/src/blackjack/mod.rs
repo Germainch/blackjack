@@ -1,7 +1,7 @@
-mod card;
-mod color;
+pub(crate) mod card;
+pub(crate) mod color;
 mod deck;
 pub(crate) mod game_state;
 mod player;
 mod score;
-mod games_list;
+pub mod games_list;

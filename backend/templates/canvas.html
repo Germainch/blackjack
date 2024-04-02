@@ -168,27 +168,16 @@
 
         <!-- PLAYER SIDE -->
         <div id="player-info">
-            <div id="money-bet"> BET : </div>
-            <div id="player-money"> BANK : </div>
+            <div id="money-bet"> BET : {{ bet }} </div>
+            <div id="player-money"> BANK : {{ bank }} </div>
         </div>
 
         <!-- CPU SIDE -->
         <div class="cpu-panel">
             <div id="cpu-deck" class="card-container">
 
-                <div class="card">
-                    <div class="color">&heartsuit;</div>
-                    <div class="value">K</div>
-                </div>
+                <!-- Cards -->
 
-                <div class="card">
-                    <div class="color">&heartsuit;</div>
-                    <div class="value">Q</div>
-                </div>
-                <div class="card">
-                    <div class="color">&spades;</div>
-                    <div class="value">J</div>
-                </div>
             </div>
         </div>
 
@@ -198,45 +187,44 @@
                 <div class="score-container">
                     <div> house </div>
                     <div id="cpu-score" class="score">
-                        15
+                        {{ cpu_score }}
                     </div>
                 </div>
 
                 <div class="score-container">
                     <div> player </div>
                     <div id="player-score" class="score">
-                        20
+                        {{ player_score }}
                     </div>
                 </div>
 
             </div>
 
             <div id="deck-container">
-
                 <img src="../deck" alt="deck" class="card-back">
             </div>
         </div>
 
 
 
-        <!-- PLAYER SCORE -->
-
-
-
-
-
         <div class="player-panel">
             <div id="player-deck" class="card-container">
-                <div class="card">
-                    <div class="color">&spades;</div>
-                    <div class="value">10</div>
-                </div>
+
+                <!-- player cards -->
+                {% for card in player_hand %}
+                    <div class="card">
+                        <div class="color"> {{ card.color }} </div>
+                        <div class="value"> {{ card.value }} </div>
+                    </div>
+                {% endfor %}
+
+
             </div>
         </div>
 
         <div id="game-buttons">
-            <button> Draw </button>
-            <button> Fold </button>
+            <button hx-post="/draw" hx-target="body"> Draw </button>
+            <button hx-post="/fold" hx-target="body"> Fold </button>
             <button hx-post="/bet" hx-target="#player-info" hx-swap="innerHTML"> Bet </button>
         </div>
 

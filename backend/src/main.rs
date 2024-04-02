@@ -6,6 +6,7 @@ use std::ops::Add;
 use std::sync::Mutex;
 use askama::Template;
 use rouille::{log, post_input, Request, Response, router, session, try_or_400};
+use crate::blackjack::games_list::GameList;
 use crate::server::{handle_route, SessionData};
 
 mod templates;
@@ -18,12 +19,15 @@ fn main() {
 
     let sessions_storage: Mutex<HashMap<String, SessionData>> = Mutex::new(HashMap::new());
 
+
     rouille::start_server("localhost:8000", move |request| {
+
 
 
         rouille::log(&request, io::stdout(), || {
             rouille::session::session(request, "SID", 3600, |session| {
 
+                let mut game_list: GameList = GameList::new();
                 let mut session_data;
 
                 if session.client_has_sid(){
@@ -40,7 +44,7 @@ fn main() {
                     session_data = None;
                 }
 
-                let response = handle_route(&request, &mut session_data);
+                let response = handle_route(&request, &mut session_data, &mut game_list);
 
                 match session_data {
                     None => {
