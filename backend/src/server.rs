@@ -171,7 +171,7 @@ pub(crate) fn handle_route_logged_in(
 
         (POST) (/logout) => {
             *session_data = None;
-            return Response::html(r#"LoggedOut"#)
+            Response::html(r#"LoggedOut"#)
         },
 
         _ => Response::empty_404()
