@@ -167,13 +167,13 @@
         justify-content: center;
         align-items: center;
         gap: 5rem;
-        color: #fde2e2;
+        color: #fff3f3;
         font-size: 40px;
         font-weight: bold;
     }
 
     #game-result button{
-        background-color: #f64747; /* Rustic brown */
+        background-color: #e81717; /* Rustic brown */
         color: #fff; /* White text */
         padding: 20px 40px; /* Padding */
         border: none; /* No border */
@@ -185,10 +185,10 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
     }
     #game-result button:hover{
-        background-color: #0056b3;
+        background-color: #b60000;
     }
     #game-result button:active{
-        transform: translateY(1px);
+        transform: translateY(2px);
     }
 
 </style>
@@ -245,13 +245,13 @@
             {%- match game_result %}
                 {%- when GameResult::Win -%}
                     You WON!
-                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" class="start-button" > New Game </button>
+                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" > New Game </button>
                 {%- when GameResult::Lose -%}
                     You LOST!
-                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" class="start-button" > New Game </button>
+                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" > New Game </button>
                 {%- when GameResult::Draw -%}
                     DRAW !
-                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" class="start-button" > New Game </button>
+                    <button hx-get="/new-game" hx-target="body" hx-swap="outerHTML" > New Game </button>
                 {%- when GameResult::OnGoing -%}
 
             {%- endmatch %}

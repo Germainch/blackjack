@@ -60,7 +60,15 @@ pub(crate) fn handle_route_not_logged_in(
                     Response::redirect_303("/start_game")
                 }
                 Err(_) => {
-                    Response::html("wrong login/password")
+                    let file = File::open("./templates/wrong_login.html");
+                    let mut html = String::new();
+                    match file{
+                        Ok(mut f) => {
+                            f.read_to_string(&mut html).unwrap_or_default();
+                            Response::html(html)
+                        }
+                        Err(_) => { Response::empty_404() }
+                    }
                 }
             }
         },
@@ -75,7 +83,16 @@ pub(crate) fn handle_route_logged_in(
 ) -> Response {
     router!(request,
         (GET) (/) => {
-            Response::redirect_303("/start_game")
+
+            let file = File::open("./templates/index_logged_in.html");
+            let mut html = String::new();
+            match file{
+                Ok(mut f) => {
+                    f.read_to_string(&mut html).unwrap_or_default();
+                    Response::html(html)
+                }
+                Err(_) => { Response::empty_404() }
+            }
         },
         (GET) (/start_game) => {
 

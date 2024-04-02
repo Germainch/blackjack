@@ -59,6 +59,9 @@ impl Blackjack {
         if !self.is_game_over() {
             self.draw_card(Human);
             self.calculate_score(Human);
+
+            self.cpu_turn();
+
             if self.player_score >= 21 {
                 self.has_player_fold = true;
                 self.cpu_loop();

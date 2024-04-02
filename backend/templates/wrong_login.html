@@ -1,0 +1,22 @@
+
+<style>
+  .bad-auth{
+    font-weight: bold;
+    color: #b60000;
+  }
+</style>
+<div id="login-form" class="login-container">
+  <h2>Login</h2>
+  <div class="bad-auth"> wrong login or password </div>
+  <form hx-post="/login" hx-target="#login-form" hx-swap="outerHTML">
+    <label>
+      <input name="login" type="text" placeholder="Username" required>
+    </label>
+
+    <label>
+      <input name="password" type="password" placeholder="Password" required>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+</div>
+
