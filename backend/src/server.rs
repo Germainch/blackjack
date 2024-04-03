@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use crate::blackjack::games_list::GameList;
 use rouille::{post_input, router, try_or_400, Request, Response};
 use std::fs::File;
@@ -18,12 +19,13 @@ pub(crate) fn handle_route(
     request: &Request,
     session_data: &mut Option<SessionData>,
     game_list: &mut GameList,
+    bank_list: &mut HashMap<String, u32>,
 ) -> Response {
     match session_data {
         // the client is not logged in
         None => handle_route_not_logged_in(request, session_data),
         // the client is logged in
-        Some(_s) => handle_route_logged_in(request, session_data, game_list),
+        Some(_s) => handle_route_logged_in(request, session_data, game_list, bank_list),
     }
 }
 pub(crate) fn handle_route_not_logged_in(
@@ -80,6 +82,7 @@ pub(crate) fn handle_route_logged_in(
     request: &Request,
     session_data: &mut Option<SessionData>,
     game_list: &mut GameList,
+    bank_list: &mut HashMap<String, u32>,
 ) -> Response {
     router!(request,
         (GET) (/) => {
@@ -110,10 +113,26 @@ pub(crate) fn handle_route_logged_in(
             // accessing game list and checking if the user has a game ongoing
             let login = session_data.to_owned().unwrap().login;
 
+            // trying to access the balance of the user, else giving a default value.
+            let option_balance = bank_list.get_mut(&login);
+            let balance: u32;
+
+            match option_balance{
+
+                None => {
+                    bank_list.insert(login.clone(), 1000);
+                    balance = bank_list.get(&login).unwrap().to_owned();
+                }
+                Some(b) => {
+                    balance = b.to_owned();
+                }
+            }
+
             let game = game_list.find_game(login.clone());
+
             match game{
                 None => {
-                    game_list.add_game(login.clone());
+                    game_list.add_game(login.clone(), balance);
                     let canvas = canvas_to_string(game_list.find_game(login).unwrap());
                     Response::html(canvas)
                 }
@@ -126,6 +145,9 @@ pub(crate) fn handle_route_logged_in(
 
         (GET) (/new-game) => {
             let login = session_data.to_owned().unwrap().login;
+            let current_game = game_list.find_game(login.clone());
+            let final_balance = current_game.unwrap().player_money();
+            *bank_list.get_mut(&login).unwrap() = final_balance ;
             game_list.remove_game(login);
             Response::redirect_303("/game")
         },

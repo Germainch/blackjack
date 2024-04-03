@@ -34,14 +34,14 @@ pub struct Blackjack {
 #[allow(unused)]
 impl Blackjack {
     /// constructor for a new game of blackjack
-    pub fn new() -> Blackjack {
+    pub fn new(player_money: u32) -> Blackjack {
         let mut deck = Deck::new();
         for _i in 0..=4 {
             deck.shuffle();
         }
 
         Blackjack {
-            player_money: 1000,
+            player_money,
             player_bet: 0,
             player_hand: Vec::new(),
             cpu_hand: Vec::new(),

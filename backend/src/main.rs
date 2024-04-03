@@ -15,6 +15,7 @@ mod users;
 fn main() {
     let sessions_storage: Mutex<HashMap<String, SessionData>> = Mutex::new(HashMap::new());
     let games_storage = Mutex::new(GameList::new());
+    let bank_storage:Mutex<HashMap<String, u32>> = Mutex::new(HashMap::new());
 
     rouille::start_server("localhost:8000", move |request| {
         rouille::log(request, io::stdout(), || {
@@ -34,9 +35,10 @@ fn main() {
                     session_data = None;
                 }
 
+                let mut bank_list = bank_storage.lock().unwrap();
                 let mut game_list = games_storage.lock().unwrap();
 
-                let response = handle_route(request, &mut session_data, &mut game_list);
+                let response = handle_route(request, &mut session_data, &mut game_list, &mut bank_list);
 
                 match session_data {
                     None => {

@@ -14,8 +14,8 @@ impl GameList {
             game_list: HashMap::new(),
         }
     }
-    pub fn add_game(&mut self, login: String) {
-        self.game_list.insert(login, Blackjack::new());
+    pub fn add_game(&mut self, login: String, balance: u32) {
+        self.game_list.insert(login, Blackjack::new(balance));
     }
     pub fn remove_game(&mut self, login: String) {
         self.game_list.remove(&login);
