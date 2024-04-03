@@ -6,7 +6,7 @@ This is a simple web-based blackjack game where you can play against the compute
 
 - Play classic blackjack against the computer.
 - Simple and intuitive user interface.
-- Server-side logic implemented in Rust for security and efficiency.
+- Server-side logic implemented in Rust.
 
 ## Prerequisites
 
@@ -35,8 +35,8 @@ Before running this project, ensure you have the following installed:
 5. Open your browser and navigate to 'http://localhost:8000'
 
 ## How to Play
-1. login to your account or register
-2. click "Draw" to draw a card
-3. click "Fold" to end your turn
-4. click "Bet" to increase your bet by 100
-5. try to get as close to 21 possible without going over !
+1. Login to your account or register
+2. Click "Draw" to draw a card
+3. Click "Fold" to end your turn
+4. Click "Bet" to increase your bet by 100
+5. Try to get as close to 21 possible without going over !
