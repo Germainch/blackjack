@@ -253,6 +253,9 @@ impl Blackjack {
     pub fn game_result(&self) -> &GameResult {
         &self.game_result
     }
+    pub fn set_player_money(&mut self, player_money: u32) {
+        self.player_money = player_money;
+    }
 }
 
 // ********************************* TESTING *********************************

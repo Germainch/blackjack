@@ -207,6 +207,14 @@ pub(crate) fn handle_route_logged_in(
             }
         },
 
+        (POST) (/add-money) => {
+            let login = session_data.to_owned().unwrap().login;
+            let game = game_list.find_game(login.clone()).unwrap();
+            *bank_list.get_mut(&login).unwrap() += 1000;
+            game.set_player_money(1000);
+            Response::html(canvas_to_string(game))
+        },
+
         (POST) (/logout) => {
             *session_data = None;
             Response::html(r#"LoggedOut"#)
